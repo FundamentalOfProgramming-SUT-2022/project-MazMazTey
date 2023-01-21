@@ -9,11 +9,12 @@
 
 void find_cursor(FILE * file , int line , int pos)
 {
+    fseek(file , 0 ,SEEK_SET);
     FILE * copy = fopen("copy.txt" , "w");
-    char before_cursor[max_input];
+    char before_cursor[1024];
     for (int i = 1; i < line ; i++)
     {
-        fgets(before_cursor , max_input , file);
+        fgets(before_cursor , 1024 , file);
         fputs(before_cursor , copy);
     }
     for (int i = 0; i < pos ; i++)
@@ -22,6 +23,6 @@ void find_cursor(FILE * file , int line , int pos)
         fputc(c , copy);
     }
     fclose(copy);
-    fclose(file);
+    //fclose(file);
     //remove("copy.txt");
 }

@@ -11,13 +11,14 @@
 #include "Functions/cat.c"
 #include "Functions/finding_cursor.c"
 #include "Functions/insert.c"
+#include "Functions/copy.c"
 ////////////////////////////////////////////
 
 void input_command()
 {
     char command[max_command];
     scanf("%s", command);
-    if (strcmp(command , "createfile") == 0)
+    if (strcmp(command , "createfile") == 0) // create file
     {
         getchar();
         char dashf[10];
@@ -33,7 +34,7 @@ void input_command()
             return;
         }
     }
-    if (strcmp(command , "cat") == 0)
+    if (strcmp(command , "cat") == 0) // cat
     {
         getchar();
         char dashf[10];
@@ -49,7 +50,7 @@ void input_command()
             return;
         }
     } 
-    if (strcmp(command , "insertstr") == 0)
+    if (strcmp(command , "insertstr") == 0) // insert
     {
         getchar();
         char dashf[10];
@@ -66,16 +67,27 @@ void input_command()
         }
         
     }
+    if (strcmp(command , "copystr") == 0) // copy
+    {
+        getchar();
+        char dashf[10];
+        scanf("%s", dashf);
+        if (strcmp(dashf , "--file") == 0)
+        {
+            getchar();
+            copy();
+        }
+        else
+        {
+            printf("Invalid Command\n");
+            return;
+        }
+    }
     
     else
         printf("Invalid Command\n");
     
 }
-
-
-
-
-
 
 
 ////////////////////////////////////////////
@@ -86,9 +98,7 @@ int main()
 {
     //while (1)
     {
-        //input_command();
-        FILE * file1 = fopen("root/file.txt" , "r");
-        find_cursor(file1 , 5 , 7);
+        input_command();
     }
     return 0;
 }

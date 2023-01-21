@@ -44,7 +44,6 @@ void create_file()
     }
     else
     {
-        printf("%s\n", input);
         FILE * newfile = fopen(input, "w");
         printf("File Created Successfully\n");
         fclose(newfile);
