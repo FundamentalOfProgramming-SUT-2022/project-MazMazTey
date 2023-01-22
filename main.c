@@ -7,12 +7,15 @@
 #include <string.h>
 #define max_input 50
 #define max_command 15
+#include "Functions/finding_cursor.c"
+#include "Functions/clipboard.c"
+#include "Functions/fill_temp.c"
 #include "Functions/createfile.c"
 #include "Functions/cat.c"
-#include "Functions/finding_cursor.c"
 #include "Functions/insert.c"
 #include "Functions/copy.c"
 #include "Functions/remove.c"
+#include "Functions/cut.c"
 ////////////////////////////////////////////
 
 void input_command()
@@ -93,6 +96,22 @@ void input_command()
         {
             getchar();
             remove1();
+        }
+        else
+        {
+            printf("Invalid Command\n");
+            return;
+        }
+    }
+    if (strcmp(command , "cutstr") == 0) // cut
+    {
+        getchar();
+        char dashf[10];
+        scanf("%s", dashf);
+        if (strcmp(dashf , "--file") == 0)
+        {
+            getchar();
+            cut();
         }
         else
         {

@@ -9,7 +9,7 @@
 //#include "finding_cursor.c"
 
 
-FILE * copy()
+FILE * cut()
 {
     char c = getchar(); // baraye gereftan / ghabl root
     int cot = 0;
@@ -45,7 +45,8 @@ FILE * copy()
         printf("This File Doesn't exist\n");
         return file;
     }
-    FILE * clipboard = fopen("clipboard.txt" , "w");
+    FILE * clipboard = fopen("clipboard.txt" , "w"); // create clipboard
+    FILE * tempfile = fopen("tempfile.txt" , "w+"); // create temp file
     if (z == '"')
     {
         getchar();
@@ -71,23 +72,19 @@ FILE * copy()
             getchar();
             char a = getchar(); // f or b
             clipb(line , pos , size , a , file , clipboard);
+            fill_temp(line , pos , size , a , file , tempfile , input);
             fclose(file);
-            fclose(clipboard);
             return clipboard;
         }
         else
         {
             printf("Invalid Command\n");
-            fclose(file);
-            fclose(clipboard);
             return clipboard;
         }
     }
     else
     {
         printf("Invalid Command\n");
-        fclose(file);
-        fclose(clipboard);
         return clipboard;
     }
 }
