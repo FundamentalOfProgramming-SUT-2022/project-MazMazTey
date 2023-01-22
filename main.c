@@ -16,6 +16,7 @@
 #include "Functions/copy.c"
 #include "Functions/remove.c"
 #include "Functions/cut.c"
+#include "Functions/paste.c"
 ////////////////////////////////////////////
 
 void input_command()
@@ -112,6 +113,22 @@ void input_command()
         {
             getchar();
             cut();
+        }
+        else
+        {
+            printf("Invalid Command\n");
+            return;
+        }
+    }
+    if (strcmp(command , "pastestr") == 0) // paste
+    {
+        getchar();
+        char dashf[10];
+        scanf("%s", dashf);
+        if (strcmp(dashf , "--file") == 0)
+        {
+            getchar();
+            paste();
         }
         else
         {

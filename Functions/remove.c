@@ -43,7 +43,7 @@ FILE * remove1()
     FILE * file = fopen(input , "r"); // open main file
     if (file == NULL)
     {
-        printf("This File Doesn't exist111\n");
+        printf("This File Doesn't exist\n");
         return file;
     }
     FILE * tempfile = fopen("tempfile.txt" , "w+"); // create temp file
