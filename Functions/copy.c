@@ -144,13 +144,13 @@ FILE * copy()
         }
         else
         {
-            printf("Invalid Command3\n");
+            printf("Invalid Command\n");
             return clipboard;
         }
     }
     else
     {
-        printf("Invalid Command4\n");
+        printf("Invalid Command\n");
         return clipboard;
     }
 }

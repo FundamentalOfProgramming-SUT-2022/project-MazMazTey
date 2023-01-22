@@ -12,6 +12,7 @@
 #include "Functions/finding_cursor.c"
 #include "Functions/insert.c"
 #include "Functions/copy.c"
+#include "Functions/remove.c"
 ////////////////////////////////////////////
 
 void input_command()
@@ -83,7 +84,22 @@ void input_command()
             return;
         }
     }
-    
+    if (strcmp(command , "removestr") == 0) // remove
+    {
+        getchar();
+        char dashf[10];
+        scanf("%s", dashf);
+        if (strcmp(dashf , "--file") == 0)
+        {
+            getchar();
+            remove1();
+        }
+        else
+        {
+            printf("Invalid Command\n");
+            return;
+        }
+    }
     else
         printf("Invalid Command\n");
     
