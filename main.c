@@ -39,7 +39,7 @@ void input_command()
             return;
         }
     }
-    if (strcmp(command , "cat") == 0) // cat
+    else if (strcmp(command , "cat") == 0) // cat
     {
         getchar();
         char dashf[10];
@@ -55,7 +55,7 @@ void input_command()
             return;
         }
     } 
-    if (strcmp(command , "insertstr") == 0) // insert
+    else if (strcmp(command, "insertstr") == 0) // insert
     {
         getchar();
         char dashf[10];
@@ -72,7 +72,7 @@ void input_command()
         }
         
     }
-    if (strcmp(command , "copystr") == 0) // copy
+    else if (strcmp(command , "copystr") == 0) // copy
     {
         getchar();
         char dashf[10];
@@ -88,7 +88,7 @@ void input_command()
             return;
         }
     }
-    if (strcmp(command , "removestr") == 0) // remove
+    else if (strcmp(command , "removestr") == 0) // remove
     {
         getchar();
         char dashf[10];
@@ -104,7 +104,7 @@ void input_command()
             return;
         }
     }
-    if (strcmp(command , "cutstr") == 0) // cut
+    else if (strcmp(command , "cutstr") == 0) // cut
     {
         getchar();
         char dashf[10];
@@ -120,7 +120,7 @@ void input_command()
             return;
         }
     }
-    if (strcmp(command , "pastestr") == 0) // paste
+    else if (strcmp(command , "pastestr") == 0) // paste
     {
         getchar();
         char dashf[10];
