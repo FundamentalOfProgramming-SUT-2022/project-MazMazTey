@@ -7,6 +7,7 @@
 #include <string.h>
 #define max_input 50
 #define max_command 15
+#include "Functions/input_file_path.c"
 #include "Functions/finding_cursor.c"
 #include "Functions/clipboard.c"
 #include "Functions/fill_temp.c"

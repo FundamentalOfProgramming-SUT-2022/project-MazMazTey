@@ -12,45 +12,14 @@
 
 FILE * remove1()
 {
-    char c = getchar(); // baraye gereftan / ghabl root
-    int cot = 0;
-    if (c == '"')
-    {
-        getchar();
-        cot = 1;
-    }
-    
     char input[max_input];
-    char z = getchar();
-    int i;
-    for (i = 0 ; z != '\n' ; i++)
-    {
-        *(input + i) = z;
-        z = getchar();
-        if (z == ' ' && cot == 0)
-        {
-            i++;
-            break;
-        }
-        if (z == '"' && cot == 1)
-        {
-            i++;
-            break;
-        }
-    }
-    *(input + i) = '\0';
-
-    FILE * file = fopen(input , "r"); // open main file
+    FILE * file = fopen(input_file_path(input) , "r"); // open main file
     if (file == NULL)
     {
         printf("This File Doesn't exist\n");
         return file;
     }
     FILE * tempfile = fopen("tempfile.txt" , "w+"); // create temp file
-    if (z == '"')
-    {
-        getchar();
-    }
     
     char dashpos[10];
     scanf("%s", dashpos);

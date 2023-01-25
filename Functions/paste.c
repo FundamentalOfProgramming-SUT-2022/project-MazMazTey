@@ -10,35 +10,8 @@
 
 FILE * paste()
 {
-    char c = getchar(); // baraye gereftan / ghabl root
-    int cot = 0;
-    if (c == '"')
-    {
-        getchar();
-        cot = 1;
-    }
-    
     char input[max_input];
-    char z = getchar();
-    int i;
-    for (i = 0 ; z != '\n' ; i++)
-    {
-        *(input + i) = z;
-        z = getchar();
-        if (z == ' ' && cot == 0)
-        {
-            i++;
-            break;
-        }
-        if (z == '"' && cot == 1)
-        {
-            i++;
-            break;
-        }
-    }
-    *(input + i) = '\0';
-
-    FILE * file = fopen(input , "r"); // open main file
+    FILE * file = fopen(input_file_path , "r"); // open main file
     FILE * tempfile = fopen("tempfile.txt", "w"); // open temp file
     if (file == NULL)
     {

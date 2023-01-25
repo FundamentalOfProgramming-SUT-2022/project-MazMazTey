@@ -9,35 +9,8 @@
 
 void closing_pairs()
 {
-    char b = getchar(); // baraye gereftan / ghabl root
-    int cot = 0;
-    if (b == '"')
-    {
-        getchar();
-        cot = 1;
-    }
-    
     char input[max_input];
-    char z = getchar();
-    int i;
-    for (i = 0 ; z != '\n' ; i++)
-    {
-        *(input + i) = z;
-        z = getchar();
-        if (z == ' ' && cot == 0)
-        {
-            i++;
-            break;
-        }
-        if (z == '"' && cot == 1)
-        {
-            i++;
-            break;
-        }
-    }
-    *(input + i) = '\0';
-
-    FILE * file = fopen(input , "r");
+    FILE * file = fopen(input_file_path(input) , "r");
     if (file == NULL)
     {
         printf("This File Doesn't exist\n");

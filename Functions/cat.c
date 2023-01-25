@@ -10,23 +10,8 @@
 
 void cat()
 {
-    char filename[max_input];
-    char c = getchar(); // baraye gereftan / ghabl root
-    int cot = 0;
-    if (c == '"')
-    {
-        getchar();
-        cot = 1;
-    }
-    char z = getchar();
-    int i;
-    for (i = 0 ; z != '\n' ; i++)
-    {
-        *(filename + i) = z;
-        z = getchar();
-    }
-    *(filename + i - cot) = '\0';
-    FILE * file_to_read = fopen(filename, "r");
+    char input[max_input];
+    FILE * file_to_read = fopen(input_file_path(input), "r");
     if (file_to_read == NULL)
     {
         printf("This File Doesn't exist\n");
@@ -40,5 +25,4 @@ void cat()
     } while (a != EOF);
     printf("\n");
     fclose(file_to_read);
-    
 }
