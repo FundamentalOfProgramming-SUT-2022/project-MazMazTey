@@ -17,6 +17,7 @@
 #include "Functions/remove.c"
 #include "Functions/cut.c"
 #include "Functions/paste.c"
+#include "Functions/closing_pairs.c"
 ////////////////////////////////////////////
 
 void input_command()
@@ -135,6 +136,11 @@ void input_command()
             printf("Invalid Command\n");
             return;
         }
+    }
+    else if (strcmp(command , "auto-indent") == 0) // closing pairs
+    {
+        getchar();
+        closing_pairs();
     }
     else
         printf("Invalid Command\n");
