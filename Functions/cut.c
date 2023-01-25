@@ -12,7 +12,7 @@
 FILE * cut()
 {
     char input[max_input];
-    FILE * file = fopen(input_file_path , "r");
+    FILE * file = fopen(input_file_path(input) , "r");
     if (file == NULL)
     {
         printf("This File Doesn't exist\n");

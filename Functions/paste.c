@@ -11,7 +11,7 @@
 FILE * paste()
 {
     char input[max_input];
-    FILE * file = fopen(input_file_path , "r"); // open main file
+    FILE * file = fopen(input_file_path(input) , "r"); // open main file
     FILE * tempfile = fopen("tempfile.txt", "w"); // open temp file
     if (file == NULL)
     {

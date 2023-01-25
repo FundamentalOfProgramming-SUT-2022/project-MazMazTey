@@ -19,6 +19,7 @@
 #include "Functions/cut.c"
 #include "Functions/paste.c"
 #include "Functions/closing_pairs.c"
+#include "Functions/text_comparator.c"
 ////////////////////////////////////////////
 
 void input_command()
@@ -143,6 +144,12 @@ void input_command()
         getchar();
         closing_pairs();
     }
+    else if (strcmp(command , "compare") == 0) // text comparator
+    {
+        getchar();
+        textcmp();
+    }
+    
     else
         printf("Invalid Command\n");
     
