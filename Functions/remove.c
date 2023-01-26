@@ -19,6 +19,7 @@ FILE * remove1()
         printf("This File Doesn't exist\n");
         return file;
     }
+    create_undo_file(file , input); // for undo
     FILE * tempfile = fopen("tempfile.txt" , "w+"); // create temp file
     
     char dashpos[10];

@@ -16,6 +16,7 @@ void closing_pairs()
         printf("This File Doesn't exist\n");
         return;
     }
+    create_undo_file(file , input); // for undo
     FILE * tempfile = fopen("tempfile.txt" , "w");
     int space_from_start = 0;
     int first_nws_char = 0;

@@ -18,6 +18,7 @@ FILE * cut()
         printf("This File Doesn't exist\n");
         return file;
     }
+    create_undo_file(file , input); // for undo
     FILE * clipboard = fopen("clipboard.txt" , "w"); // create clipboard
     FILE * tempfile = fopen("tempfile.txt" , "w+"); // create temp file
     

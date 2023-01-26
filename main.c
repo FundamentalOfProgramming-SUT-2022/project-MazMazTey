@@ -7,10 +7,12 @@
 #include <string.h>
 #define max_input 50
 #define max_command 15
+#define max_line 1024
 #include "Functions/input_file_path.c"
 #include "Functions/finding_cursor.c"
 #include "Functions/clipboard.c"
 #include "Functions/fill_temp.c"
+#include "Functions/undo.c"
 #include "Functions/createfile.c"
 #include "Functions/cat.c"
 #include "Functions/insert.c"
@@ -148,6 +150,22 @@ void input_command()
     {
         getchar();
         textcmp();
+    }
+    else if (strcmp(command , "undo") == 0) // undo
+    {
+        getchar();
+        char dashf[10];
+        scanf("%s", dashf);
+        if (strcmp(dashf , "--file") == 0)
+        {
+            getchar();
+            undo();
+        }
+        else
+        {
+            printf("Invalid Command\n");
+            return;
+        }
     }
     
     else

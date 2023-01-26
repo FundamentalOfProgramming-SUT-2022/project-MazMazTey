@@ -10,6 +10,7 @@
 
 void create_file()
 {
+    char input[max_input];
     char c = getchar(); // baraye gereftan / ghabl root
     int cot = 0;
     if (c == '"')
@@ -17,16 +18,28 @@ void create_file()
         getchar();
         cot = 1;
     }
-    
-    char input[max_input];
     char z = getchar();
     int i;
     for (i = 0 ; z != '\n' ; i++)
     {
         *(input + i) = z;
         z = getchar();
+        if (z == ' ' && cot == 0)
+        {
+            i++;
+            break;
+        }
+        if (z == '"' && cot == 1)
+        {
+            i++;
+            break;
+        }
     }
-    *(input + i - cot) = '\0';
+    *(input + i) = '\0';
+    if (z == '"')
+    {
+        getchar();
+    }
     for (int i = 0; i < max_input; i++)
     {
         if (input[i] == '/')
@@ -48,5 +61,21 @@ void create_file()
         printf("File Created Successfully\n");
         fclose(newfile);
     }
+
+    /// undo file
+    char input_undo[max_input];
+    snprintf(input_undo , sizeof(input_undo) , "%s%s" , "undo/" , input);
+    for (int i = 0; i < max_input; i++)
+    {
+        if (input_undo[i] == '/')
+        {
+            char dirname[i];
+            strncpy(dirname , input_undo , i + 1);
+            dirname[i + 1] = '\0';
+            mkdir(dirname);
+        }
+    }
+    FILE * newfile = fopen(input_undo, "w");
+    fclose(newfile);
     
 }

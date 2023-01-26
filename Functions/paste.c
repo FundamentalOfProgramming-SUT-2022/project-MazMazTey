@@ -18,6 +18,7 @@ FILE * paste()
         printf("This File Doesn't exist\n");
         return file;
     }
+    create_undo_file(file , input); // for undo
     char dashpos[10];
     scanf("%s", dashpos);
     if (strcmp(dashpos , "--pos") == 0)

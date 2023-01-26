@@ -17,6 +17,7 @@ void cat()
         printf("This File Doesn't exist\n");
         return;
     }
+    create_undo_file(file_to_read , input); // for undo
     char a;
     do
     {

@@ -57,6 +57,7 @@ void insert()
         printf("This File Doesn't exist\n");
         return;
     }
+    create_undo_file(file , input); // for undo
     int line , pos;
     char dashpos[10];
     scanf("%s", dashpos);
