@@ -22,6 +22,7 @@
 #include "Functions/paste.c"
 #include "Functions/closing_pairs.c"
 #include "Functions/text_comparator.c"
+#include "Functions/find.c"
 ////////////////////////////////////////////
 
 void input_command()
@@ -167,7 +168,22 @@ void input_command()
             return;
         }
     }
-    
+    else if (strcmp(command , "find") == 0) // find
+    {
+        getchar();
+        char dashf[10];
+        scanf("%s", dashf);
+        if (strcmp(dashf , "--file") == 0)
+        {
+            getchar();
+            find();
+        }
+        else
+        {
+            printf("Invalid Command\n");
+            return;
+        }
+    }
     else
         printf("Invalid Command\n");
     
