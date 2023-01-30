@@ -23,6 +23,7 @@
 #include "Functions/closing_pairs.c"
 #include "Functions/text_comparator.c"
 #include "Functions/find.c"
+#include "Functions/grep.c"
 ////////////////////////////////////////////
 
 void input_command()
@@ -183,6 +184,11 @@ void input_command()
             printf("Invalid Command\n");
             return;
         }
+    }
+    else if (strcmp(command , "grep") == 0) // grep
+    {
+        getchar();
+        grep_type();
     }
     else
         printf("Invalid Command\n");
