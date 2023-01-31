@@ -200,7 +200,8 @@ void replace(FILE * file , FILE * tempfile , char * string_start , char * string
     }
     
     fclose(tempfile);
-    fclose(file);   
+    fclose(file);
+    remove("temptempfile.txt");
 }
 
 void attributes2(FILE * file , FILE * tempfile , char * string_start , char * string_final , int size)
@@ -394,4 +395,16 @@ void replace_input() // aval stringi ke gharare biad baad stringi ke gharare rep
         printf("Invalid Command\n");
         return;
     }
+    file = fopen(input , "w"); // moving data to main file
+    tempfile = fopen("tempfile.txt", "r");
+    fseek(file , 0 , SEEK_SET);
+    char t = fgetc(tempfile);
+    while (t != EOF)
+    {
+        fputc(t , file);
+        t = fgetc(tempfile);
+    }
+    fclose(file);
+    fclose(tempfile);
+    remove("tempfile.txt");
 }
