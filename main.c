@@ -25,6 +25,7 @@
 #include "Functions/find.c"
 #include "Functions/grep.c"
 #include "Functions/replace.c"
+#include "Functions/tree.c"
 ////////////////////////////////////////////
 
 void input_command()
@@ -206,6 +207,11 @@ void input_command()
             printf("Invalid Command\n");
             return;
         }
+    }
+    else if (strcmp(command , "tree") == 0) // tree
+    {
+        getchar();
+        tree();
     }
     else
     {
