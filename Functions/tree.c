@@ -12,7 +12,7 @@
 void listdir(const char *name , int depth , int indent)
 {
     DIR *dir;
-    struct dirent *entry;
+    struct dirent *tree_dir;
     if (depth > -1)
     {
         if (!(dir = opendir(name)) || indent / 2 >= depth)
@@ -28,16 +28,16 @@ void listdir(const char *name , int depth , int indent)
         printf("Invalid Depth\n");
         return;
     }
-    while ((entry = readdir(dir)) != NULL) {
-        if (entry->d_type == DT_DIR) {
+    while ((tree_dir = readdir(dir)) != NULL) {
+        if (tree_dir->d_type == DT_DIR) {
             char path[1024];
-            if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+            if (strcmp(tree_dir->d_name, ".") == 0 || strcmp(tree_dir->d_name, "..") == 0)
                 continue;
-            snprintf(path, sizeof(path), "%s/%s", name, entry->d_name);
-            printf("%*s[%s]\n", indent, "", entry->d_name);
+            snprintf(path, sizeof(path), "%s/%s", name, tree_dir->d_name);
+            printf("%*s[%s]\n", indent, "", tree_dir->d_name);
             listdir(path, depth , indent + 2);
         } else {
-            printf("%*s- %s\n", indent, "", entry->d_name);
+            printf("%*s- %s\n", indent, "", tree_dir->d_name);
         }
     }
     closedir(dir);
