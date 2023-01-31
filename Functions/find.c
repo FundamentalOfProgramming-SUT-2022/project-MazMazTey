@@ -18,17 +18,17 @@ void attributes(FILE * file , char * string , int size)
     {
         find_str(file , string , size , 1 , 0);
     }
-    if (strcmp(input_attr , "-byword") == 0)
+    else if (strcmp(input_attr , "-byword") == 0)
     {
         find_str(file , string , size , 2 , 0);
     }
-    if (strcmp(input_attr , "-at") == 0)
+    else if (strcmp(input_attr , "-at") == 0)
     {
         int at_num;
         scanf("%d", &at_num);
         find_str(file , string , size , 3 , at_num);
     }
-    if (strcmp(input_attr , "-all") == 0)
+    else if (strcmp(input_attr , "-all") == 0)
     {
         find_str(file , string , size , 4 , 0);
     }
@@ -224,7 +224,7 @@ void find_str(FILE * file , char * string , int size_str , int attr , int at_num
     }
     else if (attr == 3 && count < at_num) // at wrong
     {
-        printf("-1");
+        printf("-1\n");
     }
 }
 

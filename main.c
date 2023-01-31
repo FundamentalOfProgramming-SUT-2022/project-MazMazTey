@@ -24,6 +24,7 @@
 #include "Functions/text_comparator.c"
 #include "Functions/find.c"
 #include "Functions/grep.c"
+#include "Functions/replace.c"
 ////////////////////////////////////////////
 
 void input_command()
@@ -190,9 +191,27 @@ void input_command()
         getchar();
         grep_type();
     }
+    else if (strcmp(command , "replace") == 0) // replace
+    {
+        getchar();
+        char dashf[10];
+        scanf("%s", dashf);
+        if (strcmp(dashf , "--file") == 0)
+        {
+            getchar();
+            replace_input();
+        }
+        else
+        {
+            printf("Invalid Command\n");
+            return;
+        }
+    }
     else
+    {
         printf("Invalid Command\n");
-    
+        return;
+    }
 }
 
 
