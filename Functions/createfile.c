@@ -1,12 +1,9 @@
-#include <conio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define max_input 50
-#define max_command 15
 
 void create_file()
 {

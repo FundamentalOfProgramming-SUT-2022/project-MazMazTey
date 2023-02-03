@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define max_input 50
-#define max_command 15
 #define max_line 1024
 #include <dirent.h>
 

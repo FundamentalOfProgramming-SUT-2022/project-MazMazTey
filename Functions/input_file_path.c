@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define max_input 50
-#define max_command 15
 
 char * input_file_path(char * input)
 {
