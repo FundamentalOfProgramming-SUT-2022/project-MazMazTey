@@ -4,18 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define max_input 50
-#define max_command 15
 
 void closing_pairs_gui(FILE * file , FILE * tempfile , char * input)
 {
-    //char input[max_input];
-    //FILE * file = fopen(input_file_path(input) , "r");
-    //if (file == NULL)
-    //{
-    //    printf("This File Doesn't exist\n");
-    //    return;
-    //}
     //create_undo_file(file , input); // for undo
     //FILE * tempfile = fopen("./tempfile.txt" , "w");
     int space_from_start = 0;

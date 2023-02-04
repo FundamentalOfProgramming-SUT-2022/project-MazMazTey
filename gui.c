@@ -1,6 +1,8 @@
 #include <ncurses.h>
 #include <string.h>
 #define max_input2 1000
+#define max_command 1000
+#define max_input 1000
 #include "Functions/input_file_path.c"
 #include "Functions/finding_cursor.c"
 #include "Functions/clipboard.c"
@@ -57,6 +59,7 @@ int main()
     WINDOW * win = initscr();
     FILE * file = NULL;
     FILE * tempfile = NULL;
+    FILE * clipboard = NULL;
     char input_file_name[max_input2];
     cbreak();
     keypad(win , true);
@@ -178,6 +181,41 @@ int main()
             }
 
         }
+        else if (input_char == 'p' && mode == 'N') // paste
+        {
+                tempfile = fopen("./tempfile.txt", "w");
+                clipboard = fopen("./clipboard.txt" , "r");
+                fseek(clipboard , 0 , SEEK_SET);
+                fseek(file , 0 , SEEK_SET);
+                getyx(win , y , x);
+                char before_cursor[1024];
+                for (int i = 1; i < y ; i++)
+                {
+                    fgets(before_cursor , 1024 , file);
+                    fputs(before_cursor , tempfile);
+                }
+                for (int i = 0; i < x ; i++)
+                {
+                    char c = fgetc(file);
+                    fputc(c , tempfile);
+                }
+                char a = fgetc(clipboard);
+                while (a != EOF)
+                {
+                    fputc(a , tempfile);
+                    a = fgetc(clipboard);
+                }
+                char b = fgetc(file);
+                while (b != EOF)
+                {
+                    fputc(b , tempfile);
+                    b = fgetc(file);
+                }
+                cat_gui(tempfile , "./tempfile.txt");
+                refresh();
+                mvprintw(height - 2 ,  8  , "+"); // not saved
+            
+        }
         else if (input_char == 'v' && mode == 'N') // press v to go to visual mode
         {
             mode = visual(mode , height , 0);
@@ -205,6 +243,8 @@ int main()
                 if (file != NULL)
                 {
                     save(file , tempfile , input_file_name);
+                    mvprintw(height - 2 , 8 , " "); // saved
+                    move(height - 1 , 0);
                 }
                 char c = getch();
                 int i;
@@ -237,8 +277,6 @@ int main()
                         c = fgetc(file);
                     }
                     printw("\n");
-                    //fclose(file);
-                    //file = NULL;
                     noecho();
                 }
             }
@@ -254,7 +292,6 @@ int main()
                     tempfile = fopen("./tempfile.txt", "w");
                     closing_pairs_gui(file , tempfile , input_file_name);
                     mvprintw(height - 2 ,  8  , "+"); // not saved
-                    //file = NULL;
                 }              
             }
             else if (strcmp(command , "saveas") == 0) // save as command
@@ -267,10 +304,10 @@ int main()
                     c = getch();
                 }
                 input_file_name[i] = '\0';
-                //file = fopen(input_file_name , "r"); // open main file
                 save(file , tempfile , input_file_name);
                 file = NULL;
                 mvprintw(height - 2 , 8 , " "); // saved
+                move(height - 1 , 0);
             }
             else if (strcmp(command , "save") == 0)
             {
@@ -280,12 +317,12 @@ int main()
                 }
                 else
                 {
-                    //file = fopen(input_file_name , "r");
-                    //tempfile = fopen("./tempfile.txt" , "r");
                     save(file , tempfile , input_file_name);
                     file = NULL;
+                    noecho();
                 }
                 mvprintw(height - 2 , 8 , " "); // saved
+                move(height - 1 , 0);
             }
             else
             {

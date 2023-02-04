@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ncurses.h>
-#define max_input 50
-#define max_command 15
 
 void cat_gui(FILE * file , char * input)
 {
