@@ -56,6 +56,7 @@ int main()
     WINDOW * win = initscr();
     FILE * file = NULL;
     FILE * tempfile = NULL;
+    char input_file_name[max_input2];
     cbreak();
     keypad(win , true);
     int height , width;
@@ -104,11 +105,75 @@ int main()
                         printw("%02d - ", line_num);
                     }
                 }
-                mvprintw(height - 2 , 8 , "+"); // not saved
                 getyx(win , y , x); // deleting the esc symbol on screen
+                mvprintw(height - 2 , 8 , "+"); // not saved
+                mvprintw(y , x - 2 , "  ");
+                noecho();
+                mode = normal(mode , height , 0);
+                move(height - 1 , 0);
+            }
+            else
+            {
+                int y0 , x0;
+                getyx(win , y0 , x0);
+                move(y0 , x0);
+                refresh();
+                char before_cursor[1024]; // insert before string
+                char insert_input[max_input2];
+                noecho();
+                c = getch();
+                for (int j = 0 ; (int)c != 27 ; j++)
+                {
+                    getyx(win , y , x);
+                    refresh();
+                    tempfile = fopen("./tempfile.txt", "w");
+                    insert_input[j] = c;    
+                    fseek(file , 0 , SEEK_SET);
+                    for (int i = 0; i < y0; i++)
+                    {
+                        fgets(before_cursor , 1024 , file);
+                        fputs(before_cursor , tempfile);
+                    }
+                    for (int i = 0; i < x0 ; i++)
+                    {
+                        char a = fgetc(file);
+                        fputc(a , tempfile);
+                    }
+                    for (int k = 0; k < j; k++)
+                    {
+                        fputc(insert_input[k], tempfile);
+                    }                   
+                    getyx(win , y , x);
+                    char b = fgetc(file); // insert after string
+                    while (b != EOF)
+                    {
+                        fputc(b , tempfile);
+                        b = fgetc(file);
+                    }
+                    cat_gui(tempfile , "./tempfile.txt");
+                    refresh(); // new
+                    fclose(tempfile);
+                    if (c == '\n')
+                    {
+                        move(y + 1 , 5);
+                    }
+                    else
+                        move(y , x + 1);
+                    refresh();
+                    c = getch();
+                }
+                getyx(win , y , x); // deleting the esc symbol on screen
+                mvprintw(height - 2 ,  8  , "+"); // not saved
                 mvprintw(y , x - 2 , "  ");
                 mode = normal(mode , height , 0);
                 move(height - 1 , 0);
+                char b = fgetc(file); // insert after string
+                while (b != EOF)
+                {
+                    fputc(b , tempfile);
+                    b = fgetc(file);
+                }
+                tempfile = fopen("./tempfile.txt", "r");
             }
 
         }
@@ -134,9 +199,12 @@ int main()
                 c = getch();
             }
             command[i] = '\0';
-            char input_file_name[max_input2];
             if (strcmp(command , "open") == 0) // opening file command
             {
+                if (file != NULL)
+                {
+                    save(file , tempfile , input_file_name);
+                }
                 char c = getch();
                 int i;
                 for (i = 0;c != ' ' && c != '\n'; i++)
@@ -144,7 +212,7 @@ int main()
                     input_file_name[i] = c;
                     c = getch();
                 }
-                input_file_name[i] = '\0';
+                input_file_name[i] = '\0';    
                 file = fopen(input_file_name , "r"); // open main file
                 if (file == NULL)
                 {
@@ -152,9 +220,10 @@ int main()
                 }
                 else
                 {
+                    mvprintw(height - 2 , 10 , input_file_name);
                     int line_num = 1;
                     move (0 , 0);
-                    printw("1 - ");
+                    printw("01 - ");
                     c = fgetc(file);        
                     while (c != EOF)
                     {
@@ -162,33 +231,29 @@ int main()
                         if (c == '\n')
                         {
                             line_num++;
-                            printw("%d - ", line_num);
+                            printw("%02d - ", line_num);
                         }
                         c = fgetc(file);
                     }
                     printw("\n");
-                    fclose(file);
+                    //fclose(file);
+                    //file = NULL;
                     noecho();
                 }
             }
             else if (strcmp(command , "auto-indent") == 0) // auto indent
             {
-                char c = getch();
-                int i;
-                for (i = 0;c != ' ' && c != '\n'; i++)
-                {
-                    input_file_name[i] = c;
-                    c = getch();
-                }
-                input_file_name[i] = '\0';
-                file = fopen(input_file_name , "r"); // open main file
                 if (file == NULL)
                 {
-                    mvprintw(height - 1 ,width - 25,"This File Doesn't Exist\n");
+                    mvprintw(height - 1 , 0 ,"This File Doesn't Exist\n");
                 }
                 else
                 {
-                    closing_pairs_gui(file , input_file_name);
+                    file = fopen(input_file_name , "r");
+                    tempfile = fopen("./tempfile.txt", "w");
+                    closing_pairs_gui(file , tempfile , input_file_name);
+                    mvprintw(height - 2 ,  8  , "+"); // not saved
+                    //file = NULL;
                 }              
             }
             else if (strcmp(command , "saveas") == 0) // save as command
@@ -201,8 +266,24 @@ int main()
                     c = getch();
                 }
                 input_file_name[i] = '\0';
-                file = fopen(input_file_name , "r"); // open main file
+                //file = fopen(input_file_name , "r"); // open main file
                 save(file , tempfile , input_file_name);
+                file = NULL;
+                mvprintw(height - 2 , 8 , " "); // saved
+            }
+            else if (strcmp(command , "save") == 0)
+            {
+                if (file == NULL)
+                {
+                    mvprintw(height - 1 , 0 , "Enter Name For File");
+                }
+                else
+                {
+                    //file = fopen(input_file_name , "r");
+                    //tempfile = fopen("./tempfile.txt" , "r");
+                    save(file , tempfile , input_file_name);
+                    file = NULL;
+                }
                 mvprintw(height - 2 , 8 , " "); // saved
             }
             else
@@ -217,27 +298,27 @@ int main()
             move(height - 1 , 0);
             refresh();
         }
-        else if (input_char == 'l' && (mode == 'V' || mode == 'N')) // navigation
+        else if ((input_char == 'l' || input_char == KEY_RIGHT) && (mode == 'V' || mode == 'N')) // navigation
         {
             getyx(win , y , x);
             move (y , x + 1);
         }
-        else if (input_char == 'h' && (mode == 'V' || mode == 'N'))
+        else if ((input_char == 'h' || input_char == KEY_LEFT) && (mode == 'V' || mode == 'N'))
         {
             getyx(win , y , x);
             move (y , x - 1);
         }
-        else if (input_char == 'k' && (mode == 'V' || mode == 'N'))
+        else if ((input_char == 'k' || input_char == KEY_UP) && (mode == 'V' || mode == 'N'))
         {
             getyx(win , y , x);
             move (y + 1, x);
         }
-        else if (input_char == 'j' && (mode == 'V' || mode == 'N'))
+        else if ((input_char == 'j' || input_char == KEY_DOWN) && (mode == 'V' || mode == 'N'))
         {
             getyx(win , y , x);
             move (y - 1, x);
         }
-        else if (input_char == '\n' && (mode == 'I' || mode == 'N')) // new line 
+        else if (input_char == '\n' && (mode == 'I')) // new line 
         {
             getyx(win , y , x);
             move (y + 1 , 0);

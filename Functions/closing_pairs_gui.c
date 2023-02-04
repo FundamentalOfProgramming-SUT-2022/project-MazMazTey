@@ -7,7 +7,7 @@
 #define max_input 50
 #define max_command 15
 
-void closing_pairs_gui(FILE * file , char * input)
+void closing_pairs_gui(FILE * file , FILE * tempfile , char * input)
 {
     //char input[max_input];
     //FILE * file = fopen(input_file_path(input) , "r");
@@ -17,7 +17,7 @@ void closing_pairs_gui(FILE * file , char * input)
     //    return;
     //}
     //create_undo_file(file , input); // for undo
-    FILE * tempfile = fopen("./tempfile.txt" , "w");
+    //FILE * tempfile = fopen("./tempfile.txt" , "w");
     int space_from_start = 0;
     int first_nws_char = 0;
     int open_angel_bracket = -1;
@@ -158,19 +158,6 @@ void closing_pairs_gui(FILE * file , char * input)
         }
         c = fgetc(file);   
     }
-    fclose(tempfile);
-    fclose(file);
-    file = fopen(input , "w");
-    tempfile = fopen("./tempfile.txt", "r");
-    fseek(tempfile , 0 , SEEK_SET);
-    char d = fgetc(tempfile);
-    while (d != EOF)
-    {
-        fputc(d , file);
-        d = fgetc(tempfile);
-    }
-    //fclose(file);
-    fclose(tempfile);
-    cat_gui(file , input);
-    remove("./tempfile.txt");
+    cat_gui(tempfile , "./tempfile.txt");
+    //remove("./tempfile.txt");
 }

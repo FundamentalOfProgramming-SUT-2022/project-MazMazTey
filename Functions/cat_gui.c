@@ -29,6 +29,6 @@ void cat_gui(FILE * file , char * input)
         c = fgetc(file);
     }
     printw("\n");
-    fclose(file);
+    //fclose(file);
     noecho();
 }
