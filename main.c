@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define max_input 50
-#define max_command 15
+#define max_input 1000
+#define max_command 1000
 #define max_line 1024
 #include "Functions/input_file_path.c"
 #include "Functions/finding_cursor.c"
@@ -227,7 +227,7 @@ void input_command()
 
 int main()
 {
-    //while (1)
+    while (1)
     {
         input_command();
     }

@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define max_input 50
-#define max_command 15
 
 void clipb(int line , int pos , int size , char a , FILE * file , FILE * clipboard)
 {
@@ -66,7 +64,7 @@ void clipb(int line , int pos , int size , char a , FILE * file , FILE * clipboa
             char c = fgetc(file);
             fputc(c , clipboard);
         }
-        fclose(file);
+        //fclose(file);
         fclose(clipboard);
     }
     else

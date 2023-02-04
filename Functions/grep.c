@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define max_input 50
-#define max_command 15
 #define max_line 1024
 
 void grep(char * string , int type , int size_str)
@@ -133,28 +131,34 @@ void grep_input(int type)
         i = 1;
     }
     char z = getchar();
-    for (; z != '\n' ; i++)
+    if (z == ' ' && cot == 0)
     {
-        *(string + i) = z;
-        size++;
-        z = getchar();
-        if (z == ' ' && cot == 0)
+        string[1] = '\0';
+    }
+    else
+    {
+        for (; z != '\n' ; i++)
         {
-            i++;
-            break;
+            *(string + i) = z;
+            size++;
+            z = getchar();
+            if (z == ' ' && cot == 0)
+            {
+                i++;
+                break;
+            }
+            if (z == '"' && cot == 1)
+            {
+                i++;
+                break;
+            }
         }
-        if (z == '"' && cot == 1)
+        *(string + i) = '\0';
+        if (z == '"')
         {
-            i++;
-            break;
+            getchar();
         }
     }
-    *(string + i) = '\0';
-    if (z == '"')
-    {
-        getchar();
-    }
-
     char input_command[max_command];
     scanf("%s", input_command);
     if (strcmp(input_command, "--files") == 0)
@@ -163,7 +167,7 @@ void grep_input(int type)
     }
     else
     {
-        printf("Invalid Commadn\n");
+        printf("Invalid Command\n");
         return;
     }
 

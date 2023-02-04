@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define max_input 50
-#define max_command 15
 #define max_line 1024
 
 void textcmp()
@@ -43,11 +41,13 @@ void textcmp()
     
     while (fgets(sfile1 , max_line , file1) != NULL && fgets(sfile2 , max_line , file2) != NULL)
     {
+        sfile1[strcspn(sfile1 , "\n")] = 0;
+        sfile2[strcspn(sfile2 , "\n")] = 0;
         if (strcmp(sfile1 , sfile2) != 0)
         {
             printf("=========== #%d ===========\n", line_counter);
-            printf("%s", sfile1);
-            printf("%s", sfile2);
+            printf("%s\n", sfile1);
+            printf("%s\n", sfile2);
         }
         line_counter++;
     }
@@ -65,7 +65,7 @@ void textcmp()
             printf("%s", sfile2);
         }
     }
-    if (fgets(sfile2 , max_line , file2) == NULL)
+    else if (fgets(sfile2 , max_line , file2) == NULL)
     {
         printf("\nFile 1 is bigger\n");
         printf(">>>>>>>>>> #%d - #%d >>>>>>>>>>\n", line_counter , file1_line);
