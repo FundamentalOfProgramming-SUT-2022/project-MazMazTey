@@ -65,11 +65,14 @@ int main()
     keypad(win , true);
     int height , width;
     int y , x;
+    int ycopy , xcopy;
     getmaxyx(win , height , width);
     char mode = 'N'; // N = normal V = visual I = insert q = quit
     char input_char; 
     normal(mode , height , 0);
     char c;
+    char flag;
+    int size;
     while (1)
     {
         refresh();
@@ -88,6 +91,8 @@ int main()
         else if (input_char == 'i' && mode == 'N') // press i to go to insert mode and insert
         {
             getyx(win , y , x);
+            move(height - 1 , 0);
+            clrtoeol();
             mode = insert_mode(mode , height , 0);
             move(y , x);
             refresh();
@@ -218,8 +223,14 @@ int main()
         }
         else if (input_char == 'v' && mode == 'N') // press v to go to visual mode
         {
+            clipboard = fopen("./clipboard.txt", "w");
+            size = 0;
+            getyx(win , ycopy , xcopy);
+            find_cursor(file , ycopy + 1 , xcopy - 5);
             mode = visual(mode , height , 0);
-            move(0 , 0);
+            move(height - 1 , 0);
+            clrtoeol();
+            move(ycopy , xcopy);
             refresh();
         }
         else if ((input_char == ':' || input_char == '/') && mode == 'N') // commands
@@ -336,25 +347,147 @@ int main()
             move(height - 1 , 0);
             refresh();
         }
-        else if ((input_char == 'l' || input_char == KEY_RIGHT) && (mode == 'V' || mode == 'N')) // navigation
+        else if ((input_char == 'l' || input_char == KEY_RIGHT) && mode == 'N') // navigation
         {
             getyx(win , y , x);
             move (y , x + 1);
         }
-        else if ((input_char == 'h' || input_char == KEY_LEFT) && (mode == 'V' || mode == 'N'))
+        else if ((input_char == 'h' || input_char == KEY_LEFT) && mode == 'N')
         {
             getyx(win , y , x);
             move (y , x - 1);
         }
-        else if ((input_char == 'k' || input_char == KEY_UP) && (mode == 'V' || mode == 'N'))
+        else if ((input_char == 'k' || input_char == KEY_UP) && mode == 'N')
         {
             getyx(win , y , x);
             move (y + 1, x);
         }
-        else if ((input_char == 'j' || input_char == KEY_DOWN) && (mode == 'V' || mode == 'N'))
+        else if ((input_char == 'j' || input_char == KEY_DOWN) && mode == 'N')
         {
             getyx(win , y , x);
             move (y - 1, x);
+        }
+        else if ((input_char == 'l' || input_char == KEY_RIGHT) && mode == 'V') // selection
+        {
+            flag = 'f';
+            char a = fgetc(file);
+            fputc(a , clipboard);
+            size++;
+            if (a == '\n')
+            {
+                getyx(win , y , x);
+                move(y + 1 , 5);
+            }
+            else
+            {
+                getyx(win , y , x);
+                move(y , x + 1);
+            }
+        }
+        else if ((input_char == 'h' || input_char == KEY_LEFT) && mode == 'V')
+        {
+            flag = 'b';
+            getyx(win , y , x);
+            move (y , x - 1);
+        }
+        else if ((input_char == 'k' || input_char == KEY_UP) && mode == 'V')
+        {
+            getyx(win , y , x);
+            move (y + 1, x);
+        }
+        else if ((input_char == 'j' || input_char == KEY_DOWN) && mode == 'V')
+        {
+            getyx(win , y , x);
+            move (y - 1, x);
+        }
+        else if (input_char == 'y' && mode == 'V') // copy
+        {
+            getyx(win , y , x);
+            if (flag == 'b')
+            {
+                chtype character;
+                int d = xcopy - x;
+                for (int i = 0; i <= d; i++)
+                {
+                    character = inch();
+                    fputc(character , clipboard);
+                    move(y , x + 1);
+                    getyx(win , y , x);
+                }
+                
+            }
+            fclose(clipboard);
+            mode = normal(mode , height , 0);
+        }
+        else if (input_char == 'd' && mode == 'V') // cut/delete
+        {
+            getyx(win , y , x);
+            tempfile = fopen("./tempfile.txt" , "w");
+            if (flag == 'f')
+            {
+                fseek(file , 0 , SEEK_SET);
+                char before_cursor[1024];
+                for (int i = 0; i < ycopy + 1; i++)
+                {
+                    fgets(before_cursor , 1024 , file);
+                    fputs(before_cursor , tempfile);
+                }
+                for (int i = 0; i < xcopy - 5 ; i++)
+                {
+                    char c = fgetc(file);
+                    fputc(c , tempfile);
+                }
+                find_cursor(file , y + 1 , x - 5);
+                char a = fgetc(file);
+                while (a != EOF)
+                {
+                    fputc(a , tempfile);
+                    a = fgetc(file);
+                }
+                fseek(tempfile , 0 , SEEK_SET);
+                clear();
+                cat_gui(tempfile , "./tempfile.txt");
+                refresh();
+            }
+            if (flag == 'b')
+            {
+                chtype character;
+                int d = xcopy - x;
+                for (int i = 0; i <= d; i++)
+                {
+                    character = inch();
+                    fputc(character , clipboard);
+                    move(y , x + 1);
+                    getyx(win , y , x);
+                }
+                fseek(file , 0 , SEEK_SET);
+                char before_cursor[1024];
+                for (int i = 0; i < ycopy + 1; i++)
+                {
+                    fgets(before_cursor , 1024 , file);
+                    fputs(before_cursor , tempfile);
+                }
+                for (int i = 0; i < xcopy - 5 ; i++)
+                {
+                    char c = fgetc(file);
+                    fputc(c , tempfile);
+                }
+                find_cursor(file , y + 1 , x - 5);
+                char a = fgetc(file);
+                while (a != EOF)
+                {
+                    fputc(a , tempfile);
+                    a = fgetc(file);
+                }
+                fseek(tempfile , 0 , SEEK_SET);
+                clear();
+                cat_gui(tempfile , "./tempfile.txt");
+                refresh();
+            }
+            fclose(clipboard);
+            mvprintw(height - 2 , 8 , "+"); // not saved
+            mvprintw(height - 2 , 10 , input_file_name);
+            mode = normal(mode , height , 0);
         }
         else if (input_char == '\n' && (mode == 'I')) // new line 
         {
