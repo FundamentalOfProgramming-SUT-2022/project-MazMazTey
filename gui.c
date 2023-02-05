@@ -28,18 +28,23 @@
 #include "Functions/save_gui.c"
 char normal(char mode , int height , int width)
 {
+    attron(COLOR_PAIR(1));
     mode = 'N';
     noecho();
     mvprintw(height - 2, 0 , "NORMAL");
+    attroff(COLOR_PAIR(1));
+    move(0 , 5);
     refresh();
     return mode;
 }
 
 char insert_mode(char mode , int height , int width)
 {
+    attron(COLOR_PAIR(2));
     mode = 'I';
     noecho();
     mvprintw(height - 2, 0 , "INSERT");
+    attroff(COLOR_PAIR(2));
     echo();
     refresh();
     return mode;
@@ -47,9 +52,11 @@ char insert_mode(char mode , int height , int width)
 
 char visual(char mode , int height , int width)
 {
+    attron(COLOR_PAIR(3));
     mode = 'V';
     noecho();
     mvprintw(height - 2, 0 , "VISUAL");
+    attroff(COLOR_PAIR(3));
     refresh();
     return mode;
 }
@@ -61,6 +68,11 @@ int main()
     FILE * tempfile = NULL;
     FILE * clipboard = NULL;
     char input_file_name[max_input2];
+    start_color();
+    init_pair(1 , COLOR_WHITE , COLOR_CYAN); // normal mode
+    init_pair(2 , COLOR_WHITE , COLOR_GREEN); // insert mode
+    init_pair(3 , COLOR_WHITE , COLOR_MAGENTA); // visual mode
+    init_pair(4 , COLOR_RED , COLOR_BLACK); // line numbers
     cbreak();
     keypad(win , true);
     int height , width;
@@ -223,15 +235,21 @@ int main()
         }
         else if (input_char == 'v' && mode == 'N') // press v to go to visual mode
         {
-            clipboard = fopen("./clipboard.txt", "w");
-            size = 0;
-            getyx(win , ycopy , xcopy);
-            find_cursor(file , ycopy + 1 , xcopy - 5);
-            mode = visual(mode , height , 0);
-            move(height - 1 , 0);
-            clrtoeol();
-            move(ycopy , xcopy);
-            refresh();
+            if (file == NULL)
+            {
+                mvprintw(height - 1, 0 ,"Open a File First");
+            }
+            else
+            {
+                clipboard = fopen("./clipboard.txt", "w");
+                getyx(win , ycopy , xcopy);
+                find_cursor(file , ycopy + 1 , xcopy - 5);
+                mode = visual(mode , height , 0);
+                move(height - 1 , 0);
+                clrtoeol();
+                move(ycopy , xcopy);
+                refresh();
+            }
         }
         else if ((input_char == ':' || input_char == '/') && mode == 'N') // commands
         {
@@ -251,11 +269,12 @@ int main()
             command[i] = '\0';
             if (strcmp(command , "open") == 0) // opening file command
             {
-                if (file != NULL)
+                if (file != NULL && tempfile != NULL)
                 {
                     save(file , tempfile , input_file_name);
                     mvprintw(height - 2 , 8 , " "); // saved
                     move(height - 1 , 0);
+                    file = NULL;
                 }
                 char c = getch();
                 int i;
@@ -272,10 +291,15 @@ int main()
                 }
                 else
                 {
+                    clear();
+                    mvprintw(height - 2 , 10 , input_file_name);
+                    mode = normal(mode , height , 0);
                     mvprintw(height - 2 , 10 , input_file_name);
                     int line_num = 1;
                     move (0 , 0);
+                    attron(COLOR_PAIR(4));
                     printw("01 - ");
+                    attroff(COLOR_PAIR(4));
                     c = fgetc(file);        
                     while (c != EOF)
                     {
@@ -283,13 +307,16 @@ int main()
                         if (c == '\n')
                         {
                             line_num++;
+                            attron(COLOR_PAIR(4));
                             printw("%02d - ", line_num);
+                            attroff(COLOR_PAIR(4));
                         }
                         c = fgetc(file);
                     }
                     printw("\n");
                     noecho();
                 }
+                move(0 , 5);
             }
             else if (strcmp(command , "auto-indent") == 0) // auto indent
             {
@@ -303,6 +330,8 @@ int main()
                     tempfile = fopen("./tempfile.txt", "w");
                     closing_pairs_gui(file , tempfile , input_file_name);
                     mvprintw(height - 2 ,  8  , "+"); // not saved
+                    mvprintw(height - 2 , 10 , input_file_name);
+                    mode = normal(mode , height , 0);
                 }              
             }
             else if (strcmp(command , "saveas") == 0) // save as command
@@ -326,7 +355,7 @@ int main()
                 {
                     mvprintw(height - 1 , 0 , "Enter Name For File");
                 }
-                else
+                else if (tempfile != NULL)
                 {
                     save(file , tempfile , input_file_name);
                     file = NULL;

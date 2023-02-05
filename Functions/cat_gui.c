@@ -11,7 +11,9 @@ void cat_gui(FILE * file , char * input)
     echo();
     int line_num = 1;
     move (0 , 0);
+    attron(COLOR_PAIR(4));
     printw("01 - ");
+    attroff(COLOR_PAIR(4));
     fclose(file);
     file = fopen(input , "r");
     fseek(file , 0 , SEEK_SET);
@@ -22,7 +24,9 @@ void cat_gui(FILE * file , char * input)
         if (c == '\n')
         {
             line_num++;
+            attron(COLOR_PAIR(4));
             printw("%02d - ", line_num);
+            attroff(COLOR_PAIR(4));
         }
         c = fgetc(file);
     }

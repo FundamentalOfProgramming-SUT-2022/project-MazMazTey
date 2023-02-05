@@ -149,6 +149,7 @@ void closing_pairs_gui(FILE * file , FILE * tempfile , char * input)
         }
         c = fgetc(file);   
     }
+    clear();
     cat_gui(tempfile , "./tempfile.txt");
     //remove("./tempfile.txt");
 }
